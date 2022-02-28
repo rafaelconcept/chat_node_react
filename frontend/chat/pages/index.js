@@ -12,7 +12,7 @@ export default function Home() {
   const [name, setName] = useState("")
   const [msg, setMsg] = useState("")
   const [listMsg, setListMsg] =  useState([])
-  const [ListMembers, setListMembers] =  useState(['Rafa', 'Anderson'])
+  const [ListMembers, setListMembers] =  useState([])
 
   const handlepost = (e) => {
       e.preventDefault();
@@ -20,9 +20,25 @@ export default function Home() {
       socket.emit("newMessage", {name: name?name:'Unnamed', msg: msg})
   }
 
+
+  const changeName = (e) => {
+    e.preventDefault();
+    socket.emit("changeName", {newName: name?name:''})
+  }
+  
+
+  socket.on("newConnected", (data)=>{
+
+    console.log(data)
+    data.person=='you'?setName(data.id):'';
+
+    setListMembers(data.users)
+
+  })
+
   socket.on("newMessageReceived", (data)=>{
     setListMsg([...listMsg, data])
-    console.log(data)
+  //  console.log(data)
   })
 
   return (
@@ -30,8 +46,7 @@ export default function Home() {
 
     <div className="container">
 
-      
-             
+  
 
       <Head>
         <title>Create Next App</title>
@@ -48,7 +63,9 @@ export default function Home() {
 
 
 
-        </p><input placeholder='Your Name' type="text" onChange={(e)=> setName(e.target.value)} />
+        </p>
+        <input placeholder='Your Name' type="text" onChange={(e)=> setName(e.target.value)} />
+        <button className="BotaoEnviarName" onClick={changeName}>></button>
 
         <div className="grid">
           <a className="board">
@@ -70,7 +87,7 @@ export default function Home() {
           </a>
           <div className='barraUsers'>
               People List
-              {ListMembers.map((x, index)=>(<div key={index} >{x}</div>))}
+              {ListMembers.map((x, index)=>(<div className='usuariosIndividuais' key={index} >{x.name!=''?x.name:x.id}</div>))}
 
             </div>
         
@@ -168,6 +185,7 @@ export default function Home() {
          // margin-top: 3rem;
         }
         .barraUsers {
+          font-size: 10px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -177,6 +195,10 @@ export default function Home() {
           min-height: 50px;
           max-height: 500px;
           padding: 5px;
+        }
+        .usuariosIndividuais{
+          border: 1px solid #eaeaea;
+          border-radius: 10px;
         }
 
         .mensagemBoard {
