@@ -10,6 +10,7 @@ import Head from 'next/head'
 export default function Home() {
 
   const [name, setName] = useState("")
+  const [myId, setMyId] = useState("")
   const [msg, setMsg] = useState("")
   const [listMsg, setListMsg] =  useState([])
   const [ListMembers, setListMembers] =  useState([])
@@ -17,7 +18,7 @@ export default function Home() {
   const handlepost = (e) => {
       e.preventDefault();
       setMsg('');
-      socket.emit("newMessage", {name: name?name:'Unnamed', msg: msg})
+      socket.emit("newMessage", {name: name?name:'Unnamed', msg: msg, id:myId})
   }
 
 
@@ -30,7 +31,10 @@ export default function Home() {
   socket.on("newConnected", (data)=>{
 
     console.log(data)
-    data.person=='you'?setName(data.id):'';
+    if(data.person=='you'){
+      setMyId(data.id)
+     // name?'':setName(data.id)
+    }
 
     setListMembers(data.users)
 
@@ -70,7 +74,7 @@ export default function Home() {
         <div className="grid">
           <a className="board">
             <div className="boardMsg">
-              {listMsg.map((x, index)=>(<div key={index} className={x.name==name?'mensagemBoardMinha':'mensagemBoard'}>{x.msg}</div>))
+              {listMsg.map((x, index)=>(<div key={index} className={x.id==myId?'mensagemBoardMinha':'mensagemBoard'}>{x.name}: {x.msg}</div>))
               }
               {//listMsg.map((x, index)=>(<div key={index} className='mensagemBoard'>{x.msg}</div>))
               }

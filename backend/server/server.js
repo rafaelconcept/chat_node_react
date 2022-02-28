@@ -10,7 +10,18 @@ const io = new Server(server)
 app.use('/', Routes)
 let usuarios = []
 io.on('connection', (socket)=>{
+    
+    socket.on('disconnect', function() {
+        console.log('Got disconnect!');
 
+        usuarios = usuarios.filter(x=>{
+            return x.id!=socket.id
+        })
+        
+        socket.emit('newConnected', {person: 'you', id: socket.id, users: usuarios})
+        io.emit('newConnected', {person: 'other', id: socket.id, users: usuarios})
+
+        });
     
     if(usuarios.indexOf(element => element.id == socket.id)==-1){
         usuarios = [...usuarios, {id:socket.id, name:''}]
