@@ -16,7 +16,7 @@ io.on('connection', (socket)=>{
 
         usuarios = usuarios.filter(x=>{
             return x.id!=socket.id
-        })
+        }) 
         
         socket.emit('newConnected', {person: 'you', id: socket.id, users: usuarios})
         io.emit('newConnected', {person: 'other', id: socket.id, users: usuarios})
@@ -52,12 +52,7 @@ io.on('connection', (socket)=>{
         socket.emit('newConnected', {person: 'you', id: socket.id, users: usuarios})
         io.emit('newConnected', {person: 'other', id: socket.id, users: usuarios})
 
-        //let index = usuarios.indexOf(element => element.id == socket.id)
-        //console.log(index)
-        // if(index!=-1){
-        //     usuarios[index].name = data.newName
-        // }
-        //io.emit('newMessageReceived', data)
+
         console.log(usuarios)
     })
 
