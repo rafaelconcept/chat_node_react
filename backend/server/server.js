@@ -55,7 +55,7 @@ io.on('connection', (socket)=>{
 
         console.log(usuarios)
     })
-
+    //teste
 
 })
 server.listen(8000, ()=>{
